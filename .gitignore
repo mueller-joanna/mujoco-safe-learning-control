@@ -1,2 +1,6 @@
 # Cmake output
 build/
+debug/
+
+# VS Code
+safe-learning.code-workspace
