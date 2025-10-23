@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <tensorflow/c/c_api.h>
 
-#include "cart-pole.hpp"
+#include "models/cart-pole.hpp"
 
 using safe_learning::CartPole;
 

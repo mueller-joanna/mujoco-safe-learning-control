@@ -1,4 +1,4 @@
-#include "cart-pole.hpp"
+#include "models/cart-pole.hpp"
 
 #include <cstdlib>
 

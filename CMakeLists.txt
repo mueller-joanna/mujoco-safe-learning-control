@@ -21,8 +21,9 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 set(MUJOCO_FOLDER /usr/lib/x86_64-linux-gnu)
 add_library(mujoco OBJECT ${MUJOCO_FOLDER}/libmujoco.so)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
-set(LIBS src/cart-pole.cpp)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/)
+set(MODELS src/models)
+set(LIBS ${MODELS}/cart-pole.cpp)
 add_executable(safe_learning src/main.cpp ${LIBS})
 
 target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++1
