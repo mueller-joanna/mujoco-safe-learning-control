@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(safe-learning)
+project(safe_learning)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,9 +15,18 @@ set(Local_LIBS
 )
 add_library(TensorFlow OBJECT ${Local_LIBS}/libtensorflow.so)
 
-add_executable(example src/example.cpp)
+#find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED NO_MODULE)
 
-install(TARGETS example
+set(MUJOCO_FOLDER /usr/lib/x86_64-linux-gnu)
+add_library(mujoco OBJECT ${MUJOCO_FOLDER}/libmujoco.so)
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+set(LIBS src/cart-pole.cpp)
+add_executable(safe_learning src/main.cpp ${LIBS})
+
+target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++1
+install(TARGETS safe_learning
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
 
-target_link_libraries(example PRIVATE tensorflow) # 
+target_link_libraries(safe_learning PRIVATE tensorflow Eigen3::Eigen ${MUJOCO_FOLDER}/libmujoco.so) # 
