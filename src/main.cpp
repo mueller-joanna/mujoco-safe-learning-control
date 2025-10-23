@@ -9,7 +9,7 @@ int main() {
   printf("Hello from TensorFlow C library version %s\n", TF_Version());
 
   CartPole model = CartPole();
-  model.setup_julia();
+  model.setup_model();
 
   return 0;
 }
