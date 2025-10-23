@@ -5,6 +5,7 @@
 | ------- | -------------------- | --------- | ----- |
 | [TensorFlow for C](https://www.tensorflow.org/install/lang_c) | | | |
 | [libmujoco](https://github.com/google-deepmind/mujoco) | | | |
+| [Googletest](https://github.com/google/googletest) | | | |
 
 
 ## Example
