@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.28)
 project(safe_learning)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -15,7 +16,6 @@ set(Local_LIBS
 )
 add_library(TensorFlow OBJECT ${Local_LIBS}/libtensorflow.so)
 
-#find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED NO_MODULE)
 
 set(MUJOCO_FOLDER /usr/lib/x86_64-linux-gnu)
@@ -30,3 +30,27 @@ install(TARGETS safe_learning
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
 
 target_link_libraries(safe_learning PRIVATE tensorflow Eigen3::Eigen ${MUJOCO_FOLDER}/libmujoco.so) # 
+
+## Testing
+# from https://github.com/aminya/project_options/issues/146
+set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
+)
+find_package(GTest REQUIRED NO_MODULE)
+
+enable_testing()
+
+add_executable(
+  main_test
+  tests/main_test.cpp
+)
+target_link_libraries(
+  main_test
+  GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(main_test)
