@@ -9,11 +9,11 @@ if [ -d "$build_dir" ]; then
     read -p "Remove previous build files? [y/n] " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        rm -r ${build_dir}/*
+        rm -rf ${build_dir}/*
     fi
 fi
 
 
 # From https://lindevs.com/clean-build-directory-using-cmake
-cmake -S . -B build
-cmake --build build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B build
+cmake --build build #--compile-no-warning-as-error
