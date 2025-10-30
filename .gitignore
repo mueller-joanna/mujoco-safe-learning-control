@@ -1,6 +1,11 @@
 # Cmake output
 build/
 debug/
+deps/
+compile_commands.json
+
+# Cache
+.cache/
 
 # VS Code
 safe-learning.code-workspace
