@@ -1,6 +1,5 @@
 # Safe Learning-based Control with MuJoCo
 
-<contents>
 - [Prerequisites](#prerequisites)
 - [Getting started](#getting-started)
 - [Example](#example)
@@ -8,8 +7,6 @@
 - [Debugging](#debugging)
 - [Q&A](#qa)
 - [References](#references)
-...
-
 
 ## Prerequisites
 | Package | Version requirements | Licensing | Notes |
