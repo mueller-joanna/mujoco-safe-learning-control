@@ -1,5 +1,12 @@
 include(FetchContent)
 
+# From https://discourse.cmake.org/t/how-to-turn-off-warning-flags-for-project-added-by-fetchcontent-declare/2461
+set_property(
+    DIRECTORY
+    APPEND
+    PROPERTY COMPILE_OPTIONS -Wno-error=format-truncation
+)
+
 set(Local_LIBS
     /usr/local/lib
 )

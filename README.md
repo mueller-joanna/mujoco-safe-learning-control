@@ -23,7 +23,7 @@
 ## Getting started
 1. Build project by using 
 ```
-./scripts/install-project.sh
+./scripts/build-project.sh
 ```
 2. Run with
 ```
@@ -41,9 +41,17 @@
 - [How to debug a CMake / Make project in VS Code?](https://stackoverflow.com/a/49583462/10512964)
 
 ## Q&A
+
+### Telling CMake where to find (object) libraries
 If some functions are not found after installing, check `LD_LIBRARY_PATH`
 ```
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<missing_path>
+```
+
+### Telling ClangD where to find headers
+You can do this (in the root directory of the project) by 
+```
+ln -s build/compile_commands.json ./
 ```
 
 ## References
