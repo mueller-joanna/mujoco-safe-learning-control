@@ -1,5 +1,16 @@
 # Safe Learning-based Control with MuJoCo
 
+<contents>
+- [Prerequisites](#prerequisites)
+- [Getting started](#getting-started)
+- [Example](#example)
+- [Implementation](#implementation)
+- [Debugging](#debugging)
+- [Q&A](#qa)
+- [References](#references)
+...
+
+
 ## Prerequisites
 | Package | Version requirements | Licensing | Notes |
 | ------- | -------------------- | --------- | ----- |
@@ -9,6 +20,15 @@
 | [Drake](https://github.com/RobotLocomotion/drake/) | | | |
 | [Googletest](https://github.com/google/googletest) | | | |
 
+## Getting started
+1. Build project by using 
+```
+./scripts/install-project.sh
+```
+2. Run with
+```
+./build/safe_learning
+```
 
 ## Example
 - Cart-pole/Inverted pendulum (similar to [1](#references))
