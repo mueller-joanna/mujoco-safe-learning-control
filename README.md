@@ -59,3 +59,4 @@ ln -s build/compile_commands.json ./
 2. https://techoverflow.net/2025/09/11/mujoco-c-example-list-all-bodies/
 3. https://deepwiki.com/google-deepmind/mujoco/3.2-forward-dynamics-pipeline
 4. https://github.com/google-deepmind/mujoco_mpc/tree/main
+5. https://devtoolhub.com/github-templates-pull-requests-issues-discussions/ (issue templates)
