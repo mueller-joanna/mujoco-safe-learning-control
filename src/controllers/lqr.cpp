@@ -53,8 +53,7 @@ mjtNum *LqrController::neg_K() {
   double *K = new double[rows * cols];
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
-      // K[i * rows + j] = -K_mat.coeff(i, j);
-      K[i * rows + j] = K_mat.coeff(i, j);
+      K[i * rows + j] = -K_mat.coeff(i, j);
     }
   }
   return K;
@@ -104,12 +103,13 @@ LqrController LqrController::initialize(CartPole cart_pole) {
 
   printf("Calc K");
   MatrixXd BT = B_mat.transpose();
-  drake::systems::controllers::LinearQuadraticRegulatorResult lqr_result = drake::systems::controllers::LinearQuadraticRegulator(A_mat, B_mat, Q_mat, R_mat);
-  MatrixXd K_mat = lqr_result.K; //(R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
-  //MatrixXd K_mat = (R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
+  //drake::systems::controllers::LinearQuadraticRegulatorResult lqr_result = drake::systems::controllers::LinearQuadraticRegulator(A_mat, B_mat, Q_mat, R_mat);
+  //MatrixXd K_mat = lqr_result.K; //(R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
+  MatrixXd K_mat = (R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
   ctrl.set_K(K_mat);
   PRINT_MAT(K_mat);
 
   return ctrl;
 }
+
 } // namespace safe_learning

@@ -38,14 +38,16 @@ Actuators (name/actuator/parameter):
     <geom name='rail2' type='capsule' pos='0 -.07 0' quat='0.707 0 0.707 0'
           size='0.02 1.2' />
     <body name='cart' pos='0 0 0'>
+      <inertial pos="0 0 0" mass="1"/>
       <camera name='cart' pos='0 -2.5 0' quat='0.707 0.707 0 0' />
       <joint name='slider' type='slide' limited='true' pos='0 0 0'
-               axis='1 0 0' range='-1 1' />
+      axis='1 0 0' range='-1 1' />
       <geom name='cart' type='box' pos='0 0 0'
-              size='0.2 0.1 0.05' rgba='0.7 0.7 0 1' />
+      size='0.2 0.1 0.05' rgba='0.7 0.7 0 1' />
       <site name='cart sensor' type='box' pos='0 0 0'
-              size='0.2 0.1 0.05' rgba='0.7 0.7 0 0' />
+      size='0.2 0.1 0.05' rgba='0.7 0.7 0 0' />
       <body name='pole' pos='0 0 0'>
+        <inertial pos="0 0 0" mass="1"/>
         <camera name='pole'  pos='0 -2.5 0' quat='0.707 0.707 0 0' />
         <joint name='hinge' type='hinge' pos='0 0 0' axis='0 1 0'/>
         <geom name='cpole' type='capsule' fromto='0 0 0 0 0 0.6'
@@ -62,9 +64,7 @@ Actuators (name/actuator/parameter):
   </worldbody>
 
   <actuator>
-    <!-- <motor name='slide' joint='slider' gear='50' ctrllimited='true' ctrlrange='-1 1' /> -->
-    <general ctrlrange='-1 1' gaintype="user" biastype="user" forcerange="-3 3" 
-                 gainprm="10 0 0 .1 1 10 .1 1.5 .97 3" joint="hinge" name="a-hinge" user="1"/>
+    <motor name='slide' joint='slider' gear='50' ctrllimited='true' ctrlrange='-1 1' />
   </actuator>
 
   <sensor>

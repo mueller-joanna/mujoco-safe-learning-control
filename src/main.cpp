@@ -31,14 +31,12 @@ double inner(double *first, double *second, int size) {
 }
 
 void mycontroller(const mjModel *m, mjData *d) {
-  //scl = LqrController::calculate_K(m, d);
   double* state = new double[4];
   state[0] = d->qpos[0];
   state[1] = d->qpos[1];
   state[2] = d->qvel[0];
   state[3] = d->qvel[1];
   const double res = inner(state, scl, m->nv);
-  //const double res_pos = inner(d->qpos, scl, m->nv);
   if (m->nu == m->nv) {
     // simple controller applying damping to each dof
     mju_scl(d->ctrl, &res, 1.0, m->nv);
@@ -46,8 +44,7 @@ void mycontroller(const mjModel *m, mjData *d) {
     if (min_duration > 0) {
       min_duration--;
     } else {
-      d->ctrl[0] = res; // + res_pos;
-      // d->ctrl[1] = res_pos;
+      d->ctrl[0] = res; 
     }
   }
 }
@@ -81,7 +78,7 @@ int main(int argc, char **argv) {
     return 1;
   }
   d = mj_makeData(m);
-  d->ctrl[0] = 0.001;
+  d->ctrl[0] = 0.5;
 
   // install control callback
   mjcb_control = mycontroller;
@@ -113,10 +110,6 @@ int main(int argc, char **argv) {
     //  render.
     mjtNum simstart = d->time;
     while (d->time - simstart < 1.0 / 60.0) {
-      // mycontroller(m, d);
-      // const double res = inner(d->qvel, scl, m->nv);
-      // const double res = inner(scl, scl, m->nv);
-      // d->ctrl[0] = res;
       mj_step(m, d);
     }
 

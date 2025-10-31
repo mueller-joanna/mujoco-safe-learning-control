@@ -52,7 +52,6 @@ private:
 public:
   mjtNum *neg_K();
   static LqrController initialize(CartPole cart_pole);
-  static mjtNum* calculate_K(const mjModel *m, mjData *d);
 };
 } // namespace safe_learning
 
