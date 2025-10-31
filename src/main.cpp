@@ -30,17 +30,23 @@ double inner(double *first, double *second, int size) {
   return res;
 }
 
-// simple controller applying damping to each dof
 void mycontroller(const mjModel *m, mjData *d) {
-  const double res = inner(d->qvel, scl, m->nv);
-  const double res_pos = inner(d->qpos, scl, m->nv);
+  //scl = LqrController::calculate_K(m, d);
+  double* state = new double[4];
+  state[0] = d->qpos[0];
+  state[1] = d->qpos[1];
+  state[2] = d->qvel[0];
+  state[3] = d->qvel[1];
+  const double res = inner(state, scl, m->nv);
+  //const double res_pos = inner(d->qpos, scl, m->nv);
   if (m->nu == m->nv) {
+    // simple controller applying damping to each dof
     mju_scl(d->ctrl, &res, 1.0, m->nv);
   } else {
     if (min_duration > 0) {
       min_duration--;
     } else {
-      d->ctrl[0] = res_pos; // + res_pos;
+      d->ctrl[0] = res; // + res_pos;
       // d->ctrl[1] = res_pos;
     }
   }
@@ -54,7 +60,7 @@ int main(int argc, char **argv) {
   CartPole model = CartPole();
   model.setup_model();
 
-  LqrController ctrl = LqrController(model);
+  LqrController ctrl = LqrController::initialize(model);
   scl = ctrl.neg_K();
 
   // Usage
@@ -67,7 +73,6 @@ int main(int argc, char **argv) {
     model_path = argv[1];
   }
 
-  // (Open-source MuJoCo >= 2.2 has no license activation step)
   // Load model
   char error[1024] = {0};
   m = mj_loadXML(model_path, nullptr, error, sizeof(error));
@@ -76,8 +81,7 @@ int main(int argc, char **argv) {
     return 1;
   }
   d = mj_makeData(m);
-  d->ctrl[0] = 0.25;
-  // d->ctrl[1] = 0.5;
+  d->ctrl[0] = 0.001;
 
   // install control callback
   mjcb_control = mycontroller;

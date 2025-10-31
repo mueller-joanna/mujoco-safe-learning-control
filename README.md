@@ -5,6 +5,8 @@
 | ------- | -------------------- | --------- | ----- |
 | [TensorFlow for C](https://www.tensorflow.org/install/lang_c) | | | |
 | [libmujoco](https://github.com/google-deepmind/mujoco) | | | |
+| [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) | | | |
+| [Drake](https://github.com/RobotLocomotion/drake/) | | | |
 | [Googletest](https://github.com/google/googletest) | | | |
 
 

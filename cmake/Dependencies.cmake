@@ -11,7 +11,6 @@ set(MUJOCO_BUILD_SIMULATE ON)
 set(MUJOCO_BUILD_TESTS OFF)
 set(MUJOCO_TEST_PYTHON_UTIL OFF)
 
-message("CMAKE_CURRENT_BINARY_DIR: `${CMAKE_CURRENT_BINARY_DIR}`")
 message("#### Building mujoco ####")
 FetchContent_Declare(
   mujoco
@@ -50,3 +49,5 @@ FetchContent_Declare(
 FetchContent_GetProperties(glfw)
 
 find_package(Eigen3 REQUIRED NO_MODULE)
+
+find_package(drake CONFIG REQUIRED PATHS /opt/drake)

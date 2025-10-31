@@ -31,8 +31,13 @@ target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_17)  # Require C99
 install(TARGETS safe_learning
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
 
-target_link_libraries(safe_learning PRIVATE tensorflow Eigen3::Eigen glfw
+target_link_libraries(safe_learning PRIVATE 
+  drake::drake 
+  tensorflow 
+  Eigen3::Eigen 
+  glfw
   mujoco::mujoco
-  mujoco::platform_ui_adapter) # 
+  mujoco::platform_ui_adapter
+) # 
 
 include(Testing)
