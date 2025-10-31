@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <drake/systems/controllers/linear_quadratic_regulator.h>
 
-
 namespace safe_learning {
 LqrController::LqrController(CartPole cart_pole) {
   int n_states = cart_pole.get_n_states();
@@ -19,8 +18,7 @@ bool LqrController::solveRiccati(const Eigen::MatrixXd &AdT,
                                  const Eigen::MatrixXd &Bd,
                                  const Eigen::MatrixXd &Q,
                                  const Eigen::MatrixXd &R, Eigen::MatrixXd &P,
-                                 const double &tolerance,
-                                 const uint iter_max) {
+                                 const double &tolerance, const uint iter_max) {
   P = Q; // initialize
 
   Eigen::MatrixXd P_next;
@@ -68,7 +66,6 @@ LqrController LqrController::initialize(CartPole cart_pole) {
   mjModel *model = cart_pole.get_model_data();
   mjData *data_ = mj_makeData(model);
 
-
   // dimension
   int nstate_ = model->nq + model->nv + model->na;
   int ndstate_ = 2 * model->nv + model->na;
@@ -81,8 +78,7 @@ LqrController LqrController::initialize(CartPole cart_pole) {
 
   printf("Calc A and B");
   // Both A and B are the transposed versions of the matrices we need later
-  mjd_transitionFD(model, data_, EPS, CENTERED, A.data(), B.data(),
-                   NULL, NULL);
+  mjd_transitionFD(model, data_, EPS, CENTERED, A.data(), B.data(), NULL, NULL);
 
   std::vector<double> Q = {1, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5};
 
@@ -103,8 +99,10 @@ LqrController LqrController::initialize(CartPole cart_pole) {
 
   printf("Calc K");
   MatrixXd BT = B_mat.transpose();
-  //drake::systems::controllers::LinearQuadraticRegulatorResult lqr_result = drake::systems::controllers::LinearQuadraticRegulator(A_mat, B_mat, Q_mat, R_mat);
-  //MatrixXd K_mat = lqr_result.K; //(R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
+  // drake::systems::controllers::LinearQuadraticRegulatorResult lqr_result =
+  // drake::systems::controllers::LinearQuadraticRegulator(A_mat, B_mat, Q_mat,
+  // R_mat); MatrixXd K_mat = lqr_result.K; //(R_mat + BT * P_mat *
+  // B_mat).inverse() * BT * P_mat * A_mat;
   MatrixXd K_mat = (R_mat + BT * P_mat * B_mat).inverse() * BT * P_mat * A_mat;
   ctrl.set_K(K_mat);
   PRINT_MAT(K_mat);

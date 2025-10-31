@@ -1,4 +1,4 @@
-# Safe Learning
+# Safe Learning-based Control with MuJoCo
 
 ## Prerequisites
 | Package | Version requirements | Licensing | Notes |

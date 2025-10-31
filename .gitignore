@@ -4,6 +4,9 @@ debug/
 deps/
 compile_commands.json
 
+# MuJoCo
+MUJOCO_LOG.TXT
+
 # Cache
 .cache/
 
