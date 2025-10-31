@@ -13,7 +13,6 @@ if [ -d "$build_dir" ]; then
     fi
 fi
 
-
 # From https://lindevs.com/clean-build-directory-using-cmake
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B build
 cmake --build build #--compile-no-warning-as-error

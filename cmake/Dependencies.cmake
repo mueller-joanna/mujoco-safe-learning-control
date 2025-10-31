@@ -29,6 +29,7 @@ FetchContent_Declare(
 
 FetchContent_GetProperties(mujoco)
 FetchContent_MakeAvailable(mujoco)
+
 target_compile_options(mujoco INTERFACE
   -Wno-error
 )
@@ -58,3 +59,7 @@ FetchContent_GetProperties(glfw)
 find_package(Eigen3 REQUIRED NO_MODULE)
 
 find_package(drake CONFIG REQUIRED PATHS /opt/drake)
+
+#find_package(Python 3 EXACT MODULE REQUIRED
+#    COMPONENTS Development Interpreter)
+find_package(Python REQUIRED Development)

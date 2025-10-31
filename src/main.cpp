@@ -4,11 +4,14 @@
 #include <tensorflow/c/c_api.h>
 
 #include "controllers/lqr.hpp"
+#include "controllers/rl.hpp"
 #include "models/cart-pole.hpp"
 
 using safe_learning::CartPole;
 using safe_learning::LqrController;
+using safe_learning::RlController;
 using namespace std;
+
 
 // --- Globals kept tiny for GLFW callbacks ---
 static mjModel *m = nullptr;
@@ -20,7 +23,7 @@ static mjvScene scn;   // abstract scene
 static mjrContext con; // custom GPU context
 static mjtNum *scl;
 
-static int min_duration = 5;
+static int starting_delay = 10;
 
 double inner(double *first, double *second, int size) {
   double res = 0;
@@ -30,22 +33,17 @@ double inner(double *first, double *second, int size) {
   return res;
 }
 
-void mycontroller(const mjModel *m, mjData *d) {
+void cartpole_controller(const mjModel *m, mjData *d) {
   double* state = new double[4];
   state[0] = d->qpos[0];
   state[1] = d->qpos[1];
   state[2] = d->qvel[0];
   state[3] = d->qvel[1];
   const double res = inner(state, scl, m->nv);
-  if (m->nu == m->nv) {
-    // simple controller applying damping to each dof
-    mju_scl(d->ctrl, &res, 1.0, m->nv);
+  if (starting_delay > 0) {
+    starting_delay--;
   } else {
-    if (min_duration > 0) {
-      min_duration--;
-    } else {
-      d->ctrl[0] = res; 
-    }
+    d->ctrl[0] = res; 
   }
 }
 
@@ -58,6 +56,7 @@ int main(int argc, char **argv) {
   model.setup_model();
 
   LqrController ctrl = LqrController::initialize(model);
+  RlController rl_ctrl = RlController::initialize(model);
   scl = ctrl.neg_K();
 
   // Usage
@@ -80,8 +79,9 @@ int main(int argc, char **argv) {
   d = mj_makeData(m);
   d->ctrl[0] = 0.5;
 
+  // From https://mujoco.readthedocs.io/en/3.3.7/programming/simulation.html
   // install control callback
-  mjcb_control = mycontroller;
+  mjcb_control = cartpole_controller;
 
   // init GLFW, create window, make OpenGL context current, request v-sync
   glfwInit();

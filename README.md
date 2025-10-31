@@ -11,7 +11,11 @@
 ## Prerequisites
 | Package | Version requirements | Licensing | Notes |
 | ------- | -------------------- | --------- | ----- |
+| [CMake](https://cmake.org/) | | | |
+| [Clang](https://clang.llvm.org/) | | | |
+| [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)| | | |
 | [TensorFlow for C](https://www.tensorflow.org/install/lang_c) | | | |
+| [libfdeep-dev]() | | | |
 | [libmujoco](https://github.com/google-deepmind/mujoco) | | | |
 | [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) | | | |
 | [Drake](https://github.com/RobotLocomotion/drake/) | | | |
@@ -25,6 +29,11 @@
 2. Run with
 ```
 ./build/safe_learning
+```
+
+### Linting
+```
+clang-tidy-14 ./src/**/* ./include/**/*
 ```
 
 ## Example
@@ -54,6 +63,8 @@ ln -s build/compile_commands.json ./
 ## References
 1. Brunke, Lukas, et al. "Safe learning in robotics: From learning-based control to safe reinforcement learning." Annual Review of Control, Robotics, and Autonomous Systems 5.1 (2022): 411-444. 
 2. https://techoverflow.net/2025/09/11/mujoco-c-example-list-all-bodies/
+3. https://techoverflow.net/2025/09/11/minimal-c-mujoco-scene-viewer-with-mouse-navigation-simulation/
 3. https://deepwiki.com/google-deepmind/mujoco/3.2-forward-dynamics-pipeline
 4. https://github.com/google-deepmind/mujoco_mpc/tree/main
 5. https://devtoolhub.com/github-templates-pull-requests-issues-discussions/ (issue templates)
+6. [Underactuated Robotics (MIT) - Chapter 8 Linear Quadratic Regulators](https://underactuated.mit.edu/lqr.html)
