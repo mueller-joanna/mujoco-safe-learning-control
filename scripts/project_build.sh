@@ -14,5 +14,5 @@ if [ -d "$build_dir" ]; then
 fi
 
 # From https://lindevs.com/clean-build-directory-using-cmake
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B build
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release --fresh -S . -B build
 cmake --build build #--compile-no-warning-as-error
