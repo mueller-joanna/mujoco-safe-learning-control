@@ -1,16 +1,20 @@
 include(FetchContent)
 
 # From https://discourse.cmake.org/t/how-to-turn-off-warning-flags-for-project-added-by-fetchcontent-declare/2461
+# TODO add if debug
+if( CMAKE_BUILD_TYPE STREQUAL "Debug")
+message("#### Don't display warnings as errors when building dependencies ####")
 set_property(
-    DIRECTORY
-    APPEND
-    PROPERTY COMPILE_OPTIONS -Wno-error=format-truncation
+   DIRECTORY
+   APPEND
+   PROPERTY COMPILE_OPTIONS -Wno-error=format-truncation
 )
+endif()
 
-set(Local_LIBS
-    /usr/local/lib
-)
-add_library(TensorFlow OBJECT ${Local_LIBS}/libtensorflow.so)
+#set(Local_LIBS
+#    /usr/local/lib
+#)
+#add_library(TensorFlow OBJECT ${Local_LIBS}/libtensorflow.so)
 
 
 set(MUJOCO_BUILD_EXAMPLES OFF)

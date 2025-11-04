@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
 #include <stdio.h>
-#include <tensorflow/c/c_api.h>
+//#include <tensorflow/c/c_api.h>
 
 #include "controllers/lqr.hpp"
 #include "controllers/rl.hpp"
@@ -49,7 +49,7 @@ void cartpole_controller(const mjModel *m, mjData *d) {
 
 ///////////////////////////////// main //////////////////////////////////////
 int main(int argc, char **argv) {
-  printf("Hello from TensorFlow C library version %s\n", TF_Version());
+  //printf("Hello from TensorFlow C library version %s\n", TF_Version());
   printf("Hello from MuJoCo C library version %d\n", mj_version());
 
   CartPole model = CartPole();
