@@ -64,6 +64,5 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 
 find_package(drake CONFIG REQUIRED PATHS /opt/drake)
 
-#find_package(Python 3 EXACT MODULE REQUIRED
-#    COMPONENTS Development Interpreter)
+# From https://stackoverflow.com/a/72162717/10512964
 find_package(Python REQUIRED Development)

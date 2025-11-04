@@ -50,4 +50,4 @@ target_link_libraries(safe_learning PRIVATE
   mujoco::platform_ui_adapter
 ) # 
 
-#include(Testing)
+include(Testing)

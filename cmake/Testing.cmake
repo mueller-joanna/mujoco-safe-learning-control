@@ -1,12 +1,15 @@
 include(FetchContent)
 
+message("#### Building testing dependencies ####")
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        v1.17.0
 )
+FetchContent_GetProperties(googletest)
 FetchContent_MakeAvailable(googletest)
 
-find_package(GTest REQUIRED NO_MODULE)
+#find_package(GTest REQUIRED NO_MODULE)
 
 enable_testing()
 

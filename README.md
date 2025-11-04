@@ -70,7 +70,6 @@ ln -s build/compile_commands.json ./
 6. [Underactuated Robotics (MIT) - Chapter 8 Linear Quadratic Regulators](https://underactuated.mit.edu/lqr.html)
 
 ## TODOS
-- [ ] Fix Gtest in OCI container
 - [ ] Automize drake installation in container
 - [ ] Clean up container files
 - [ ] Set up embed python
