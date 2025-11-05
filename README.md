@@ -74,3 +74,4 @@ ln -s build/compile_commands.json ./
 - [ ] Clean up container files
 - [ ] Set up embed python
 - [ ] Set up RL controller
+- [ ] Replace libcurl by ROS2?

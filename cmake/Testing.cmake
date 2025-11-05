@@ -9,8 +9,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(googletest)
 FetchContent_MakeAvailable(googletest)
 
-#find_package(GTest REQUIRED NO_MODULE)
-
 enable_testing()
 
 add_executable(

@@ -34,10 +34,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(mujoco)
 FetchContent_MakeAvailable(mujoco)
 
-target_compile_options(mujoco INTERFACE
-  -Wno-error
-)
-
 set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
 set(GLFW_BUILD_DOCS OFF)
@@ -64,5 +60,14 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 
 find_package(drake CONFIG REQUIRED PATHS /opt/drake)
 
-# From https://stackoverflow.com/a/72162717/10512964
-find_package(Python REQUIRED Development)
+message("#### Building curl ####")
+FetchContent_Declare(
+  curl
+  URL https://curl.se/download/curl-8.16.0.tar.gz
+  DOWNLOAD_EXTRACT_TIMESTAMP true
+  OVERRIDE_FIND_PACKAGE
+)
+
+#FetchContent_GetProperties(curl)
+FetchContent_MakeAvailable(curl)
+find_package(curl)
