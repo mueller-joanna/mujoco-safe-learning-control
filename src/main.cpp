@@ -3,8 +3,8 @@
 #include <stdio.h>
 //#include <tensorflow/c/c_api.h>
 
-#include "controllers/lqr.hpp"
 #include "controllers/rl.hpp"
+#include "controllers/lqr.hpp"
 #include "models/cart-pole.hpp"
 
 using safe_learning::CartPole;

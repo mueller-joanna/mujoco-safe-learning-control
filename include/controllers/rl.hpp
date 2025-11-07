@@ -2,9 +2,12 @@
 #define RL_NODE_H
 
 #include <float.h>
+#include <iostream>
 
 #include <Eigen/Dense>
 #include <mujoco/mujoco.h>
+
+#include <curl/curl.h>
 
 #include "models/cart-pole.hpp"
 

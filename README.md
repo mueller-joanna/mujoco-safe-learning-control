@@ -75,3 +75,4 @@ ln -s build/compile_commands.json ./
 - [ ] Set up embed python
 - [ ] Set up RL controller
 - [ ] Replace libcurl by ROS2?
+- [ ] Move python into separate repository (maybe add as submodule)

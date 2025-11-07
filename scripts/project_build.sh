@@ -13,6 +13,8 @@ if [ -d "$build_dir" ]; then
     fi
 fi
 
+torch_path=$(pwd)/vendors/libtorch/
 # From https://lindevs.com/clean-build-directory-using-cmake
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release --fresh -S . -B build
-cmake --build build #--compile-no-warning-as-error
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_PREFIX_PATH="${torch_path}" --fresh -S . -B ${build_dir}
+cmake --build build 
