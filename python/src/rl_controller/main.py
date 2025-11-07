@@ -15,10 +15,10 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/init/")
+@app.post("/init")
 def init(model: MujocoModel):
     agent = Agent(model)
-    return { msg: "OK!" }
+    return { "msg": "OK!" }
     #return {"agent": agent}
 
 @app.post("/observation/")
