@@ -10,6 +10,7 @@ MUJOCO_LOG.TXT
 # Python
 python/.venv/
 python/dist/
+__pycache__/
 
 # Cache
 .cache/
