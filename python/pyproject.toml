@@ -1,0 +1,48 @@
+[project]
+name = "rl_controller"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "jmueller",email = "koffi.pot@posteo.de"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy (>=2.3.4,<3.0.0)",
+    "gymnasium[classic-control] (>=1.2.2,<2.0.0)",
+    "torch (>=2.9.0,<3.0.0)",
+    "matplotlib (>=3.10.7,<4.0.0)",
+    "fastapi[standard] (>=0.121.0,<0.122.0)",
+    "uvicorn (>=0.38.0,<0.39.0)",
+    "mujoco (>=3.3.7,<4.0.0)"
+]
+
+[project.scripts]
+rl_controller = "rl_controller.main:start"
+
+
+[tool.poetry]
+packages = [
+    {include = "rl_controller", from = "src"},
+    {include = "rl", from = "src"},
+]
+
+[tool.poetry.group.dev.dependencies]
+poetry = "^2.2.1"
+black = "^25.9.0"
+pytest = "^8.4.2"
+pyaml = "^25.7.0"
+lark = "^1.3.1"
+
+
+[[tool.poetry.source]]
+name = "torch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "supplemental"
+
+
+[tool.poetry.dependencies]
+torch = {source = "torch"}
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

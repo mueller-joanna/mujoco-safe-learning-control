@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
+        {
+            "name": "Python Debugger: main",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/src/rl_controller/main.py",
+            "console": "integratedTerminal"
+        },
         {
             "name": "C/C++ Debug (gdb Launch)",
             "type": "cppdbg",
@@ -23,7 +29,11 @@
                 }
             ],
             "preLaunchTask": "build",
-            "logging": { "engineLogging": true, "trace": true, "traceResponse": true }
+            "logging": {
+                "engineLogging": true,
+                "trace": true,
+                "traceResponse": true
+            }
         }
     ]
 }

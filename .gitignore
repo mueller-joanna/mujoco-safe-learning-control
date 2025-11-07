@@ -7,6 +7,10 @@ compile_commands.json
 # MuJoCo
 MUJOCO_LOG.TXT
 
+# Python
+python/.venv/
+python/dist/
+
 # Cache
 .cache/
 
