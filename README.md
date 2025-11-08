@@ -68,11 +68,3 @@ ln -s build/compile_commands.json ./
 4. https://github.com/google-deepmind/mujoco_mpc/tree/main
 5. https://devtoolhub.com/github-templates-pull-requests-issues-discussions/ (issue templates)
 6. [Underactuated Robotics (MIT) - Chapter 8 Linear Quadratic Regulators](https://underactuated.mit.edu/lqr.html)
-
-## TODOS
-- [ ] Automize drake installation in container
-- [ ] Clean up container files
-- [ ] Set up embed python
-- [ ] Set up RL controller
-- [ ] Replace libcurl by ROS2?
-- [ ] Move python into separate repository (maybe add as submodule)
