@@ -36,7 +36,7 @@ set(MODELS src/models)
 set(LIBS ${MODELS}/cart-pole.cpp ${CONTROLLERS}/lqr.cpp ${CONTROLLERS}/rl.cpp)
 add_executable(safe_learning src/main.cpp ${LIBS})
 
-target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++1
+target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_20) 
 
 install(TARGETS safe_learning
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
