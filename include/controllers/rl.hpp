@@ -8,6 +8,7 @@
 #include <mujoco/mujoco.h>
 
 #include <curl/curl.h>
+#include <vector>
 
 #include "models/cart-pole.hpp"
 
@@ -34,11 +35,13 @@ private:
   MatrixXd K_mat;
 
 private:
-private:
   void set_K(MatrixXd K_mat) { this->K_mat = K_mat; }
 
 public:
   mjtNum *neg_K();
+  void send_observations(vector<double*> observations);
+
+public:
   static RlController initialize(CartPole cart_pole);
 };
 } // namespace safe_learning

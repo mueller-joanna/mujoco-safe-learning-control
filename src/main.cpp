@@ -33,12 +33,18 @@ double inner(double *first, double *second, int size) {
   return res;
 }
 
-void cartpole_controller(const mjModel *m, mjData *d) {
+double* get_state(mjData *d) {
   double* state = new double[4];
   state[0] = d->qpos[0];
   state[1] = d->qpos[1];
   state[2] = d->qvel[0];
   state[3] = d->qvel[1];
+
+  return state;
+}
+
+void cartpole_controller(const mjModel *m, mjData *d) {
+  double* state = get_state(d);
   const double res = inner(state, scl, m->nv);
   if (starting_delay > 0) {
     starting_delay--;
@@ -102,6 +108,9 @@ int main(int argc, char **argv) {
   // ... install GLFW keyboard and mouse callbacks
 
   // run main loop, target real-time simulation and 60 fps rendering
+  int num_steps = 0;
+  vector<double*> state_history;
+  state_history.push_back(get_state(d));
   while (!glfwWindowShouldClose(window)) {
     // advance interactive simulation for 1/60 sec
     //  Assuming MuJoCo can simulate faster than real-time, which it usually
@@ -126,6 +135,13 @@ int main(int argc, char **argv) {
 
     // process pending GUI events, call GLFW callbacks
     glfwPollEvents();
+
+    state_history.push_back(get_state(d));
+    num_steps++;
+
+    if (num_steps == 50) {
+      rl_ctrl.send_observations(state_history);
+    }
   }
 
   // close GLFW, free visualization storage
