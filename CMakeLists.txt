@@ -30,6 +30,12 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(Dependencies)
   
+set(VENDORS_DIR ${CMAKE_CURRENT_LIST_DIR}/vendors)
+#add_subdirectory(${VENDORS_DIR}/reflect)
+include_directories(${VENDORS_DIR}/reflect)
+
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/vendors/)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include/)
 set(CONTROLLERS src/controllers)
 set(MODELS src/models)
@@ -40,6 +46,11 @@ target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_20)
 
 install(TARGETS safe_learning
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
+
+#target_sources(safe_learning PRIVATE 
+#  FILE_SET all_my_modules TYPE CXX_MODULES FILES
+#  ${VENDORS_DIR}/reflect/reflect.cppm
+#)
 
 target_link_libraries(safe_learning PRIVATE 
   drake::drake 

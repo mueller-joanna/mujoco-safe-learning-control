@@ -9,5 +9,6 @@ if [ -d "$build_dir" ]; then
     rm -rf ${build_dir}/
 fi
 
+export CMAKE_GENERATOR=Ninja
 cmake -DCMAKE_BUILD_TYPE=Debug -S . -B $build_dir
 cmake --build $build_dir

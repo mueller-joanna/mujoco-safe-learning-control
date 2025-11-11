@@ -12,6 +12,8 @@
 | Package | Version requirements | Licensing | Notes |
 | ------- | -------------------- | --------- | ----- |
 | [CMake](https://cmake.org/) | | | |
+| [GCC/G++](TODO) | >=14 | | |
+| [Ninja-build](TODO) | | | |
 | [Clang](https://clang.llvm.org/) | | | |
 | [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)| | | |
 | [TensorFlow for C](https://www.tensorflow.org/install/lang_c) | | | |
