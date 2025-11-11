@@ -5,11 +5,11 @@ ENV DEBIAN_FRONTEND noninteractive
 COPY ./scripts /app/scripts
 
 RUN apt-get update && apt-get dist-upgrade -y 
-RUN apt-get install cmake gcc g++ git make build-essential \
+RUN apt-get install cmake gcc-14 g++-14 git make build-essential \
     libwayland-dev libx11-dev libxrandr-dev libxinerama-dev \
     libxcursor-dev libxi-dev libeigen3-dev libxkbcommon-dev \
     libpython3-dev libgl-dev libcurl4-openssl-dev libssl-dev libpsl-dev \
-    clang-14 clang++-14 xorg-dev \
+    clang-14 clang++-14 xorg-dev ninja-build \
     gnupg lsb-release wget ca-certificates curl unzip jq locate nano -y --no-install-recommends 
 
 # Add drake installation
