@@ -1,10 +1,12 @@
 import gymnasium as gym
+from gymnasium.envs.mujoco import MujocoEnv
+from gymnasium.spaces import Space as ObservationSpace
 import math
-import mujoco
 import json
 import random
 import asyncio
 from itertools import count
+import mujoco as mj
 
 import torch
 import torch.nn as nn
@@ -15,6 +17,7 @@ import matplotlib.pyplot as plt
 
 from communication.model import MujocoModel
 from communication.observation import Observation
+from environment.template import TemplateEnv
 
 from rl.dqn import DQN
 from rl.replay_memory import ReplayMemory, Transition
@@ -50,26 +53,21 @@ class Agent(object):
         )
 
     def init_model(self, model: MujocoModel):
-        self.model = model
+        self.model_path = model.model
         self.n_actions = 2 * model.nu
+        self.len_state = model.nv
 
-    def train(self, observations: Observation):
+    def train(self):
+        if not self.model_path:
+            return "Model was not initialized!"
+
         self.blocked = True
 
-        # Temporary to test setup
-        self.env = gym.make("CartPole-v1")
+        self.env = TemplateEnv(self.model_path, self.len_state)
         # Get the number of state observations
         state, info = self.env.reset()
     
-        # set up matplotlib
-        # is_ipython = 'inline' in matplotlib.get_backend()
-        # if is_ipython:
-        #     from IPython import display
-
-        # plt.ion()
-
-        observation_list = observations.observations
-        #self.n_observations = len(observation_list[0])
+        self.n_actions = self.env.action_space.n
         self.n_observations = len(state)
         self._create_net()
 
@@ -85,13 +83,12 @@ class Agent(object):
 
         for i_episode in range(num_episodes):
             # Initialize the environment and get its state
-            #state = observation_list[i_episode]
             # Get the number of state observations
             state, info = self.env.reset()
             state = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
             for t in count():
                 action, steps_done = self._select_action(state, steps_done)
-                observation, reward, terminated, truncated, _ = self.env.step(action.item())
+                observation, reward, terminated, truncated, _ = self.env.step(int(action.item()))
                 reward = torch.tensor([reward], device=self.device)
                 done = terminated or truncated
 
@@ -119,13 +116,9 @@ class Agent(object):
 
                 if done:
                     episode_durations.append(t + 1)
-                    # self._plot_durations()
                     break
 
         print('Complete')
-        # self._plot_durations(show_result=True)
-        # plt.ioff()
-        # plt.show()
 
         self.blocked = False
 
@@ -169,6 +162,7 @@ class Agent(object):
         non_final_next_states = torch.cat([s for s in batch.next_state
                                                     if s is not None])
         state_batch = torch.cat(batch.state)
+
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
 
@@ -198,32 +192,6 @@ class Agent(object):
         # In-place gradient clipping
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
-
-    def _plot_durations(self, show_result=False):
-        plt.figure(1)
-        durations_t = torch.tensor(episode_durations, dtype=torch.float)
-        if show_result:
-            plt.title('Result')
-        else:
-            plt.clf()
-            plt.title('Training...')
-        plt.xlabel('Episode')
-        plt.ylabel('Duration')
-        plt.plot(durations_t.numpy())
-        # Take 100 episode averages and plot them too
-        if len(durations_t) >= 100:
-            means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
-            means = torch.cat((torch.zeros(99), means))
-            plt.plot(means.numpy())
-
-        plt.pause(0.001)  # pause a bit so that plots are updated
-        if is_ipython:
-            if not show_result:
-                display.display(plt.gcf())
-                display.clear_output(wait=True)
-            else:
-                display.display(plt.gcf())
-
 
     def to_json(self):
         # From https://stackoverflow.com/a/15538391/10512964

@@ -19,7 +19,7 @@ async def process_requests(q: asyncio.Queue, pool: ProcessPoolExecutor):
     while True:
         observations = await q.get()  # Get a request from the queue
         loop = asyncio.get_running_loop()
-        r = await loop.run_in_executor(pool, rl_agent.train, observations)
+        r = await loop.run_in_executor(pool, rl_agent.train)
         q.task_done()  # tell the queue that the processing on the task is completed
 
 @asynccontextmanager
@@ -45,8 +45,8 @@ def init(model: MujocoModel):
     #return {"agent": rl_agent.to_json() }
 
 @app.post("/observation")
-async def post_observation(request: Request, observations: Observation):
-    request.state.q.put_nowait(observations)  # Add request to the queue
+async def post_observation(request: Request):
+    request.state.q.put_nowait("do loop")  # Add request to the queue
     return { "msg": "Started training!" }
 
 

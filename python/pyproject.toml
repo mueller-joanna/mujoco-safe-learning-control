@@ -14,7 +14,8 @@ dependencies = [
     "matplotlib (>=3.10.7,<4.0.0)",
     "fastapi[standard] (>=0.121.0,<0.122.0)",
     "uvicorn (>=0.38.0,<0.39.0)",
-    "mujoco (>=3.3.7,<4.0.0)"
+    "mujoco (>=3.3.7,<4.0.0)",
+    "imageio (>=2.37.2,<3.0.0)"
 ]
 
 [project.scripts]

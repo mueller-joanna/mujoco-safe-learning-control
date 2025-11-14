@@ -32,10 +32,10 @@ include(Dependencies)
   
 set(VENDORS_DIR ${CMAKE_CURRENT_LIST_DIR}/vendors)
 #add_subdirectory(${VENDORS_DIR}/reflect)
-include_directories(${VENDORS_DIR}/reflect)
+#include_directories(${VENDORS_DIR}/reflect)
 
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/vendors/)
+#include_directories(${CMAKE_CURRENT_LIST_DIR}/vendors/)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include/)
 set(CONTROLLERS src/controllers)
 set(MODELS src/models)

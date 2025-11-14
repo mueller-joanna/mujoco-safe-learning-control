@@ -1,17 +1,16 @@
 #include <GLFW/glfw3.h>
+#include <filesystem>
 #include <mujoco/mujoco.h>
 #include <stdio.h>
-//#include <tensorflow/c/c_api.h>
 
-#include "controllers/rl.hpp"
 #include "controllers/lqr.hpp"
+#include "controllers/rl.hpp"
 #include "models/cart-pole.hpp"
 
 using safe_learning::CartPole;
 using safe_learning::LqrController;
 using safe_learning::RlController;
 using namespace std;
-
 
 // --- Globals kept tiny for GLFW callbacks ---
 static mjModel *m = nullptr;
@@ -33,8 +32,8 @@ double inner(double *first, double *second, int size) {
   return res;
 }
 
-double* get_state(mjData *d) {
-  double* state = new double[4];
+double *get_state(mjData *d) {
+  double *state = new double[4];
   state[0] = d->qpos[0];
   state[1] = d->qpos[1];
   state[2] = d->qvel[0];
@@ -44,25 +43,23 @@ double* get_state(mjData *d) {
 }
 
 void cartpole_controller(const mjModel *m, mjData *d) {
-  double* state = get_state(d);
+  double *state = get_state(d);
   const double res = inner(state, scl, m->nv);
   if (starting_delay > 0) {
     starting_delay--;
   } else {
-    d->ctrl[0] = res; 
+    d->ctrl[0] = res;
   }
 }
 
 ///////////////////////////////// main //////////////////////////////////////
 int main(int argc, char **argv) {
-  //printf("Hello from TensorFlow C library version %s\n", TF_Version());
   printf("Hello from MuJoCo C library version %d\n", mj_version());
 
   CartPole model = CartPole();
   model.setup_model();
 
   LqrController ctrl = LqrController::initialize(model);
-  RlController rl_ctrl = RlController::initialize(model);
   scl = ctrl.neg_K();
 
   // Usage
@@ -74,6 +71,9 @@ int main(int argc, char **argv) {
   } else {
     model_path = argv[1];
   }
+  string base_path{std::filesystem::current_path().c_str()};
+  string abs_model_path = base_path + "/" + model_path;
+  RlController rl_ctrl = RlController::initialize(model, abs_model_path);
 
   // Load model
   char error[1024] = {0};
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 
   // run main loop, target real-time simulation and 60 fps rendering
   int num_steps = 0;
-  vector<double*> state_history;
+  vector<double *> state_history;
   state_history.push_back(get_state(d));
   while (!glfwWindowShouldClose(window)) {
     // advance interactive simulation for 1/60 sec

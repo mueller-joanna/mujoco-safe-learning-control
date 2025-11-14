@@ -39,10 +39,10 @@ private:
 
 public:
   mjtNum *neg_K();
-  void send_observations(vector<double*> observations);
+  void send_observations(vector<double *> observations);
 
 public:
-  static RlController initialize(CartPole cart_pole);
+  static RlController initialize(CartPole cart_pole, string model_file_path);
 };
 } // namespace safe_learning
 
