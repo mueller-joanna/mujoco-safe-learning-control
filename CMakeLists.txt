@@ -39,7 +39,13 @@ set(VENDORS_DIR ${CMAKE_CURRENT_LIST_DIR}/vendors)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include/)
 set(CONTROLLERS src/controllers)
 set(MODELS src/models)
-set(LIBS ${MODELS}/cart-pole.cpp ${CONTROLLERS}/lqr.cpp ${CONTROLLERS}/rl.cpp)
+set(VISUALIZATION src/visualization)
+set(LIBS 
+  ${MODELS}/cart-pole.cpp
+  ${CONTROLLERS}/lqr.cpp
+  ${CONTROLLERS}/rl.cpp
+  ${VISUALIZATION}/mujoco_sim.cpp
+)
 add_executable(safe_learning src/main.cpp ${LIBS})
 
 target_compile_features(safe_learning PUBLIC c_std_99 cxx_std_20) 
