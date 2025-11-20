@@ -11,6 +11,12 @@ set_property(
 )
 endif()
 
+set_property(
+   DIRECTORY
+   APPEND
+   PROPERTY COMPILE_OPTIONS -Wno-error=format-truncation -Wno-error=unused-parameter -Wno-error=type-limits -Wno-error=old-style-declaration
+)
+
 #set(Local_LIBS
 #    /usr/local/lib
 #)
@@ -70,3 +76,5 @@ FetchContent_Declare(
 #FetchContent_GetProperties(curl)
 FetchContent_MakeAvailable(curl)
 find_package(curl)
+
+find_package(nlohmann_json REQUIRED)

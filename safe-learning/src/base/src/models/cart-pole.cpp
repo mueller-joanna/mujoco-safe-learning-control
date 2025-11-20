@@ -1,12 +1,20 @@
 #include "models/cart-pole.hpp"
 
+#include <filesystem>
 #include <cstdlib>
+
+using namespace std;
 
 namespace safe_learning {
 void CartPole::setup_model() {
+  // TODO: refactor
+  string model_path = "assets/cartpole.xml";
+  string base_path{std::filesystem::current_path().c_str()};
+  string abs_model_path = base_path + "/../" + model_path;
+  
   // From https://techoverflow.net/2025/09/11/mujoco-c-example-list-all-bodies/
   char error[1000] = "Could not load binary model";
-  mjModel *m = mj_loadXML("assets/cartpole.xml", nullptr, error, 1000);
+  mjModel *m = mj_loadXML(abs_model_path.c_str(), nullptr, error, 1000);
   if (!m) {
     printf("%s\n", error);
   }

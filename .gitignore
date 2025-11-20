@@ -1,5 +1,7 @@
 # Cmake output
 build/
+install/
+log/
 debug/
 deps/
 compile_commands.json
@@ -11,6 +13,7 @@ MUJOCO_LOG.TXT
 python/.venv/
 python/dist/
 __pycache__/
+recipes/
 
 # Cache
 .cache/

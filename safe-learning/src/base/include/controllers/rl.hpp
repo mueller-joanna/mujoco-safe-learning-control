@@ -18,6 +18,8 @@ using namespace std;
 
 namespace safe_learning {
 
+  static string ENDPOINT = "http://localhost:8000/";
+
 class RlController {
 private:
   RlController(CartPole cart_pole);
@@ -40,6 +42,7 @@ private:
 public:
   mjtNum *neg_K();
   void send_observations(vector<double *> observations);
+  mjtNum * get_action();
 
 public:
   static RlController initialize(CartPole cart_pole, string model_file_path);
