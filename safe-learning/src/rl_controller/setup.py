@@ -24,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'talker = rl_controller.main:main',
+            'control = rl_controller.main:main',
         ],
     },
 )

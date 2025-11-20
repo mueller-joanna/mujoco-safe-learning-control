@@ -1,16 +1,14 @@
 import rclpy
 from rclpy.node import Node
 
-
 from std_msgs.msg import String
 
 from .nodes.service import MinimalService
-from .rl.agent import Agent
 
 def main(args=None):
     rclpy.init(args=args)
 
-    service = MinimalService(Agent())
+    service = MinimalService()
 
     rclpy.spin(service)
 
