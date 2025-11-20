@@ -15,12 +15,10 @@ import torch.optim as optim
 import matplotlib
 import matplotlib.pyplot as plt
 
-from communication.model import MujocoModel
-from communication.observation import Observation
-from environment.template import TemplateEnv
+from ..environment.template import TemplateEnv
 
-from rl.dqn import DQN
-from rl.replay_memory import ReplayMemory, Transition
+from .dqn import DQN
+from .replay_memory import ReplayMemory, Transition
 
 # BATCH_SIZE is the number of transitions sampled from the replay buffer
 # GAMMA is the discount factor as mentioned in the previous section
@@ -37,6 +35,7 @@ EPS_END = 0.01
 EPS_DECAY = 2500
 TAU = 0.005
 LR = 3e-4
+BOUNDARIES = 5.0
 
 class Agent(object):
     """
@@ -52,10 +51,11 @@ class Agent(object):
             "cpu"
         )
 
-    def init_model(self, model: MujocoModel):
-        self.model_path = model.model
-        self.n_actions = 2 * model.nu
-        self.len_state = model.nv
+    def init_model(self, model_path: str):
+        self.model_path = model_path
+        #self.n_actions = 2 * model.nu
+        self.len_state = 4 #model.nv
+        self.last_state = None
 
     def train(self):
         if not self.model_path:
@@ -96,6 +96,7 @@ class Agent(object):
                     next_state = None
                 else:
                     next_state = torch.tensor(observation, dtype=torch.float32, device=self.device).unsqueeze(0)
+                    self.last_state = next_state
 
                 # Store the transition in memory
                 self.memory.push(state, action, next_state, reward)
@@ -192,6 +193,28 @@ class Agent(object):
         # In-place gradient clipping
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
+
+    def get_action(self):
+
+        if not self.model_path:
+            return "Model was not initialized!"
+        if self.blocked or self.last_state == None:
+            return "Model was not trained!"
+
+        # TODO: use different state from C++?
+        steps_done = 0
+        action, steps_done = self._select_action(self.last_state, steps_done)
+        observation, reward, terminated, truncated, _ = self.env.step(int(action.item()))
+
+        return action.item()
+
+    def get_action_as_float(self):
+        try:
+            action = (float(self.get_action()) - BOUNDARIES) / BOUNDARIES
+        except ValueError:
+            # Maybe replace by default value
+            action = self.get_action()
+        return action
 
     def to_json(self):
         # From https://stackoverflow.com/a/15538391/10512964

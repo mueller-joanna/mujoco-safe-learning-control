@@ -7,8 +7,6 @@ from gymnasium import spaces
 
 import mujoco as mj
 
-from communication.model import MujocoModel
-
 class TemplateEnv(MujocoEnv, utils.EzPickle):
     """
     TODO
@@ -35,9 +33,10 @@ class TemplateEnv(MujocoEnv, utils.EzPickle):
             **kwargs
         )
 
-        # TODO temporary
         # MujocoEnv assumes spaces.Box(low=low, high=high, dtype=np.float32)
-        self.action_space = spaces.Discrete(2)
+        # Discrete action space seems to be working better. Maybe 5 steps per direction + zero
+        self.action_space = spaces.Discrete(10)
+        #self.action_space = spaces.Box(low=-5, high=5, dtype=np.long)
 
 
     def step(self, a):
