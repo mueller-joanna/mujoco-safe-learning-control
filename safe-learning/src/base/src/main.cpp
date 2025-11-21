@@ -1,10 +1,15 @@
+#include <chrono>
+#include <memory>
 #include <filesystem>
+#include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
 #include <stdio.h>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "example_interfaces/srv/add_two_ints.hpp"
 
+//#include "client.hpp"
 #include "controllers/lqr.hpp"
 //#include "controllers/rl.hpp"
 #include "models/cart-pole.hpp"
@@ -14,14 +19,14 @@ using safe_learning::CartPole;
 using safe_learning::LqrController;
 
 using namespace std;
+using namespace std::chrono_literals;
 
 // --- Globals kept tiny for GLFW callbacks ---
-static mjModel *m = nullptr;
-static mjData *d = nullptr;
-
+mjModel *m = nullptr;
+mjData *d = nullptr;
 static mjtNum *scl;
 
-//static RlController* ctrl;
+// //static RlController* ctrl;
 
 static int starting_delay = 10;
 
@@ -54,23 +59,47 @@ void cartpole_controller_lqr(const mjModel *m, mjData *d) {
   }
 }
 
+void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request> request,
+          std::shared_ptr<example_interfaces::srv::AddTwoInts::Response>      response)
+{
+  response->sum = request->a + request->b;
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\na: %ld" " b: %ld",
+                request->a, request->b);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%ld]", (long int)response->sum);
+}
+
+std::shared_ptr<rclcpp::Node> get_node() {
+  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
+  
+  rclcpp::Service<example_interfaces::srv::AddTwoInts>::SharedPtr service =
+   node->create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
+  
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to add two ints.");
+
+  safe_learning::run_simulation(cartpole_controller_lqr, m, d);
+
+  return node;
+}
+
+
 ///////////////////////////////// main //////////////////////////////////////
 int main(int argc, char ** argv)
 {
   printf("Hello from MuJoCo C library version %d\n", mj_version());
+  
   rclcpp::init(argc, argv);
 
-  CartPole model = CartPole();
-  model.setup_model();
-
-  LqrController ctrl = LqrController::initialize(model);
-  scl = ctrl.neg_K();
-
+  // mjModel *m = nullptr;
+  // mjData *d = nullptr;
+  
+  // CartPole model = CartPole();
+  // model.setup_model();
+  
   // TODO: refactor
   string model_path = "assets/cartpole.xml";
   string base_path{std::filesystem::current_path().c_str()};
   string abs_model_path = base_path + "/../" + model_path;
-
+  
   // Load model
   char error[1024] = {0};
   m = mj_loadXML(abs_model_path.c_str(), nullptr, error, sizeof(error));
@@ -79,14 +108,21 @@ int main(int argc, char ** argv)
     return 1;
   }
   d = mj_makeData(m);
+
+  //LqrController ctrl = LqrController::initialize(model);
+  LqrController ctrl = LqrController::initialize(m, d);
+  scl = ctrl.neg_K();
+
   d->ctrl[0] = 0.5;
 
-  safe_learning::run_simulation(cartpole_controller_lqr, m, d);
-
-  rclcpp::executors::MultiThreadedExecutor executor;
-
-  executor.spin();
+  rclcpp::spin(get_node());
   rclcpp::shutdown();
+  //safe_learning::run_simulation(cartpole_controller_lqr, m, d);
+
+  // rclcpp::executors::MultiThreadedExecutor executor;
+
+  // executor.spin();
+  // rclcpp::shutdown();
 
   return 0;
 }

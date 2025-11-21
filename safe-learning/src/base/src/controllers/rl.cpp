@@ -102,7 +102,7 @@ RlController RlController::initialize(CartPole cart_pole,
                                       string model_file_path) {
   RlController ctrl = RlController(cart_pole);
 
-  mjModel *model = cart_pole.get_model_data();
+  mjModel *model = cart_pole.get_model();
   mjData *data_ = mj_makeData(model);
 
   int n_states = cart_pole.get_n_states();

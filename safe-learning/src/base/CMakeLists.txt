@@ -23,6 +23,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(example_interfaces REQUIRED)
 
 message("CMAKE_CURRENT_LIST_DIR" ${CMAKE_CURRENT_LIST_DIR})
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include/)
@@ -49,7 +50,7 @@ target_link_libraries(base
   CURL::libcurl
   nlohmann_json::nlohmann_json
 ) # 
-ament_target_dependencies(base rclcpp std_msgs)
+ament_target_dependencies(base rclcpp std_msgs example_interfaces)
 
 install(TARGETS base
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})

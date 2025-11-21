@@ -31,7 +31,7 @@ message("#### Building mujoco ####")
 FetchContent_Declare(
   mujoco
   GIT_REPOSITORY https://github.com/google-deepmind/mujoco.git
-  GIT_TAG        3.3.7
+  GIT_TAG        3.2.7 #3.3.7 does not seem to work with ROS
   UPDATE_DISCONNECTED TRUE
   EXCLUDE_FROM_ALL TRUE 
 )

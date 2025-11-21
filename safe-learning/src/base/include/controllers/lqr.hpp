@@ -27,6 +27,7 @@ static bool CENTERED = true;
 class LqrController {
 private:
   LqrController(CartPole cart_pole);
+  LqrController() { }
 
 private:
   VectorXd desired_set_point_x;
@@ -51,6 +52,7 @@ private:
 
 public:
   mjtNum *neg_K();
+  static LqrController initialize(const mjModel *m, mjData *d);
   static LqrController initialize(CartPole cart_pole);
 };
 } // namespace safe_learning

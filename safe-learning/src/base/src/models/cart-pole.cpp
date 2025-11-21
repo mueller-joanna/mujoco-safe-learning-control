@@ -19,21 +19,25 @@ void CartPole::setup_model() {
     printf("%s\n", error);
   }
 
-  this->model_data = m;
+  this->_model = m;
   this->n_states = 2 * m->nv;
   this->n_inputs = m->nu;
 
+  this->nstate_ = this->_model->nq + this->_model->nv + this->_model->na;
+  this->ndstate_ = 2 * this->_model->nv + this->_model->na;
+
   // Create data
-  mjData *d = mj_makeData(m);
+  this->_data = mj_makeData(m);
 
   // Free MuJoCo structures
-  mj_deleteData(d);
-  mj_deleteModel(m);
+  // mj_deleteData(d);
+  // mj_deleteModel(m);
 }
 
 int CartPole::get_n_states() { return this->n_states; }
 
 int CartPole::get_n_inputs() { return this->n_inputs; }
 
-mjModel *CartPole::get_model_data() { return this->model_data; }
+mjModel *CartPole::get_model() { return this->_model; }
+mjData *CartPole::get_data() { return this->_data; }
 } // namespace safe_learning
