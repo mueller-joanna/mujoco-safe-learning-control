@@ -1,0 +1,44 @@
+// From https://docs.ros.org/en/rolling/How-To-Guides/Setup-ROS-2-with-VSCode-and-Docker-Container.html#edit-devcontainer-json-for-your-environment
+{
+    "name": "ROS 2 Development Container",
+    "privileged": true,
+    //"remoteUser": "YOUR_USERNAME",
+    // TODO: replace by path to github registry
+    "build": {
+        "context": "../",
+        "dockerfile": "../oci/Containerfile"
+        // "args": {
+        //     "USERNAME": "YOUR_USERNAME"
+        // }
+    },
+    "workspaceFolder": "/app",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-themes",
+                "twxs.cmake",
+                "donjayamanne.python-extension-pack",
+                "eamodio.gitlens",
+                "ms-iot.vscode-ros"
+            ]
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "unix:0",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "ROS_DOMAIN_ID": "42"
+    },
+    "runArgs": [
+        "--net=host",
+        "--pid=host",
+        "--ipc=host",
+        "-e", "DISPLAY=${env:DISPLAY}"
+    ],
+    "mounts": [
+       "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+       "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
+    ],
+    //"postCreateCommand": "./scripts/"
+}
