@@ -7,10 +7,16 @@
 #include <Eigen/Dense>
 #include <mujoco/mujoco.h>
 
-#include <curl/curl.h>
 #include <vector>
 
-#include "models/cart-pole.hpp"
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+
+#include "rclcpp/rclcpp.hpp"
+#include "sl_interfaces/srv/string.hpp"
+#include "sl_interfaces/srv/action.hpp"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -18,11 +24,9 @@ using namespace std;
 
 namespace safe_learning {
 
-  static string ENDPOINT = "http://localhost:8000/";
-
 class RlController {
 private:
-  RlController(CartPole cart_pole);
+  RlController();
 
 private:
   vector<int> action_space;
@@ -41,12 +45,14 @@ private:
 
 public:
   mjtNum *neg_K();
-  void send_observations(vector<double *> observations);
-  mjtNum * get_action();
+  int init_model(std::shared_ptr<rclcpp::Node> node, string model_path);
+  int request_train(std::shared_ptr<rclcpp::Node> node);
+  float request_action(std::shared_ptr<rclcpp::Node> node);
 
 public:
-  static RlController initialize(CartPole cart_pole, string model_file_path);
+  static RlController initialize(string model_file_path);
 };
+
 } // namespace safe_learning
 
 #endif

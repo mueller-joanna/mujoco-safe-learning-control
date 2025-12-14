@@ -1,5 +1,6 @@
 #include <chrono>
 #include <memory>
+#include <functional>
 #include <filesystem>
 #include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
@@ -8,15 +9,17 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "example_interfaces/srv/add_two_ints.hpp"
+#include "sl_interfaces/srv/string.hpp"
 
 //#include "client.hpp"
 #include "controllers/lqr.hpp"
-//#include "controllers/rl.hpp"
+#include "controllers/rl.hpp"
 #include "models/cart-pole.hpp"
 #include "visualization/mujoco_sim.hpp"
 
 using safe_learning::CartPole;
 using safe_learning::LqrController;
+using safe_learning::RlController;
 
 using namespace std;
 using namespace std::chrono_literals;
@@ -59,36 +62,13 @@ void cartpole_controller_lqr(const mjModel *m, mjData *d) {
   }
 }
 
-void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request> request,
-          std::shared_ptr<example_interfaces::srv::AddTwoInts::Response>      response)
-{
-  response->sum = request->a + request->b;
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Incoming request\na: %ld" " b: %ld",
-                request->a, request->b);
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "sending back response: [%ld]", (long int)response->sum);
-}
-
-std::shared_ptr<rclcpp::Node> get_node() {
-  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
-  
-  rclcpp::Service<example_interfaces::srv::AddTwoInts>::SharedPtr service =
-   node->create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
-  
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Ready to add two ints.");
-
-  safe_learning::run_simulation(cartpole_controller_lqr, m, d);
-
-  return node;
-}
-
 
 ///////////////////////////////// main //////////////////////////////////////
 int main(int argc, char ** argv)
 {
   printf("Hello from MuJoCo C library version %d\n", mj_version());
   
-  rclcpp::init(argc, argv);
-
+  
   // mjModel *m = nullptr;
   // mjData *d = nullptr;
   
@@ -99,6 +79,7 @@ int main(int argc, char ** argv)
   string model_path = "assets/cartpole.xml";
   string base_path{std::filesystem::current_path().c_str()};
   string abs_model_path = base_path + "/../" + model_path;
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Model path: %s", abs_model_path.c_str());
   
   // Load model
   char error[1024] = {0};
@@ -108,14 +89,35 @@ int main(int argc, char ** argv)
     return 1;
   }
   d = mj_makeData(m);
-
+  
   //LqrController ctrl = LqrController::initialize(model);
-  LqrController ctrl = LqrController::initialize(m, d);
+  //LqrController ctrl = LqrController::initialize(m, d);
+  RlController ctrl = RlController::initialize(model_path);
   scl = ctrl.neg_K();
-
+  
   d->ctrl[0] = 0.5;
+  
+  rclcpp::init(argc, argv);
 
-  rclcpp::spin(get_node());
+  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
+
+  int status = ctrl.init_model(node, abs_model_path);
+  if (status == 0) {
+    status = ctrl.request_train(node);
+  }
+  if (status == 0) {
+    float action = ctrl.request_action(node);
+  }
+
+  //rclcpp::executors::MultiThreadedExecutor executor;
+
+  // <node>: std::variant<std::shared_ptr<custom_class>>
+  // std::variant<std::shared_ptr<MinimalPublisher>> node = 
+  //   std::make_shared<MinimalPublisher>();
+  // std::visit([&executor](auto&& arg) { executor.add_node(arg); }, node);
+
+  // executor.spin();
+  //rclcpp::spin(node);
   rclcpp::shutdown();
   //safe_learning::run_simulation(cartpole_controller_lqr, m, d);
 

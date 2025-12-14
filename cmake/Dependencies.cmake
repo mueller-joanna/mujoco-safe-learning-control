@@ -72,9 +72,3 @@ FetchContent_Declare(
   DOWNLOAD_EXTRACT_TIMESTAMP true
   OVERRIDE_FIND_PACKAGE
 )
-
-#FetchContent_GetProperties(curl)
-FetchContent_MakeAvailable(curl)
-find_package(curl)
-
-find_package(nlohmann_json REQUIRED)
