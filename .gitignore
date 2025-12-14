@@ -17,6 +17,7 @@ recipes/
 
 # Cache
 .cache/
+tmp/
 
 # VS Code
 safe-learning.code-workspace

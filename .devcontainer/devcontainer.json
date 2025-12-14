@@ -16,12 +16,11 @@
     "customizations": {
         "vscode": {
             "extensions":[
+                "KylinIdeTeam.cppdebug",
+                "ms-azuretools.vscode-containers",
+                "christian-kohler.path-intellisense",
                 "ms-vscode.cpptools",
-                "ms-vscode.cpptools-themes",
-                "twxs.cmake",
-                "donjayamanne.python-extension-pack",
-                "eamodio.gitlens",
-                "ms-iot.vscode-ros"
+                "ms-vscode.cpptools-extension-pack"
             ]
         }
     },
@@ -34,11 +33,12 @@
         "--net=host",
         "--pid=host",
         "--ipc=host",
-        "-e", "DISPLAY=${env:DISPLAY}"
+        // "-e", "DISPLAY=${env:DISPLAY}"
+        "-e", "DISPLAY=unix:0"
     ],
     "mounts": [
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
     ],
-    //"postCreateCommand": "./scripts/"
+    //"postStartCommand": "source /opt/ros/$ROS_DISTRO/setup.bash"
 }

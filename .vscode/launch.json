@@ -19,7 +19,7 @@
             "name": "Python Debugger: main",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/python/src/rl_controller/main.py",
+            "program": "${workspaceFolder}/safe-learning/src/rl_controller/rl_controller/main.py",
             "console": "integratedTerminal"
         },
         {
@@ -45,6 +45,16 @@
                 "trace": true,
                 "traceResponse": true
             }
+        },
+        // From https://gist.github.com/JADC362/a4425c2d05cdaadaaa71b697b674425f
+        {
+            "name": "C++ Debugger (ROS 2)",
+            "request": "launch",
+            "type": "cppdbg",
+            "miDebuggerServerAddress": "localhost:3000",
+            "cwd": "/",
+            "program": "/app/safe-learning/build/safe_learning/base",
+            "preLaunchTask": "debug_server"
         }
     ]
 }
