@@ -20,7 +20,8 @@
                 "ms-azuretools.vscode-containers",
                 "christian-kohler.path-intellisense",
                 "ms-vscode.cpptools",
-                "ms-vscode.cpptools-extension-pack"
+                "ms-vscode.cpptools-extension-pack",
+                "Ranch-Hand-Robotics.rde-ros-2"
             ]
         }
     },

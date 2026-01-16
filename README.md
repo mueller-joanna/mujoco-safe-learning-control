@@ -46,7 +46,11 @@ clang-tidy-14 ./src/**/* ./include/**/*
 - Combining reinforcement learning and `<TODO>` control
 
 ## Debugging
-- [How to debug a CMake / Make project in VS Code?](https://stackoverflow.com/a/49583462/10512964)
+1. Start debug server with
+```
+./scripts/debug_build.sh
+```
+2. Attach VS Code debugger through debug configs
 
 ## Q&A
 

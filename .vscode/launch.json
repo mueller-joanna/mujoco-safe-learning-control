@@ -5,56 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: FastAPI",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": [
-                "rl_controller.main:start",
-                "--reload"
-            ],
-            "jinja": true
-        },
-        {
             "name": "Python Debugger: main",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/safe-learning/src/rl_controller/rl_controller/main.py",
             "console": "integratedTerminal"
         },
-        {
-            "name": "C/C++ Debug (gdb Launch)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/debug/safe_learning",
-            "args": [],
-            "stopAtEntry": true,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "build",
-            "logging": {
-                "engineLogging": true,
-                "trace": true,
-                "traceResponse": true
-            }
-        },
         // From https://gist.github.com/JADC362/a4425c2d05cdaadaaa71b697b674425f
+        // Start debug, attach debugger afterwards
         {
             "name": "C++ Debugger (ROS 2)",
             "request": "launch",
             "type": "cppdbg",
             "miDebuggerServerAddress": "localhost:3000",
             "cwd": "/",
-            "program": "/app/safe-learning/build/safe_learning/base",
-            "preLaunchTask": "debug_server"
-        }
+            "program": "/app/safe-learning/build/safe_learning/base"
+        },
     ]
 }

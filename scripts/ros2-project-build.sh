@@ -7,4 +7,6 @@ cd $SCRIPT_DIR/../safe-learning
 colcon build --symlink-install
 . install/setup.bash
 (trap 'kill 0' SIGINT;
-ros2 run safe_learning base)
+ros2 run safe_learning base &
+ros2 run rl_controller control
+)

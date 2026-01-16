@@ -17,7 +17,8 @@ colcon build --symlink-install --packages-select sl_interfaces
 # Ensure that interfaces are available at next build step
 . install/local_setup.bash
 
-colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug --packages-select safe_learning
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo --packages-select safe_learning
 . install/local_setup.bash
 
 ros2 run --prefix 'gdbserver localhost:3000' safe_learning base
+            
