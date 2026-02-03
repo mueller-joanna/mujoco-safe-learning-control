@@ -48,7 +48,7 @@ clang-tidy-14 ./src/**/* ./include/**/*
 ## Debugging
 1. Start debug server with
 ```
-./scripts/debug_build.sh
+./scripts/base_debug.sh
 ```
 2. Attach VS Code debugger through debug configs
 
