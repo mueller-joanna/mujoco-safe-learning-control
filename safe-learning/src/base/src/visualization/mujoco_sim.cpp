@@ -1,5 +1,6 @@
 #include "visualization/mujoco_sim.hpp"
 #include "mujoco/mjdata.h"
+#include <unistd.h>
 
 
 namespace safe_learning
@@ -8,17 +9,17 @@ namespace safe_learning
     static mjvOption opt;  // visualization options
     static mjvScene scn;   // abstract scene
     static mjrContext con; // custom GPU context
-    static GLFWwindow *window;
+    //static GLFWwindow *window;
 
     static mjtNum *scl;
 
     static mjModel *m;
     static mjData *d;
 
-    void init_window() {
+    GLFWwindow* init_window() {
         // init GLFW, create window, make OpenGL context current, request v-sync
         glfwInit();
-        window = glfwCreateWindow(1200, 900, "Demo", NULL, NULL);
+        GLFWwindow *window = glfwCreateWindow(1200, 900, "Demo", NULL, NULL);
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
 
@@ -31,9 +32,11 @@ namespace safe_learning
         // create scene and context
         mjv_makeScene(m, &scn, 1000);
         mjr_makeContext(m, &con, mjFONTSCALE_100);
+
+        return window;
     }
 
-    void loop() {
+    void loop(GLFWwindow *window) {
         // run main loop, target real-time simulation and 60 fps rendering
         while (!glfwWindowShouldClose(window)) {
             // advance interactive simulation for 1/60 sec
@@ -43,7 +46,7 @@ namespace safe_learning
             //  render.
             mjtNum simstart = d->time;
             while (d->time - simstart < 1.0 / 60.0) {
-            mj_step(m, d);
+                mj_step(m, d);
             }
 
             // get framebuffer viewport
@@ -77,14 +80,14 @@ namespace safe_learning
     int run_simulation(mjfGeneric ctrl, mjModel *_model, mjData *_data) {
         m = _model;
         d = _data;
-        init_window();
+        GLFWwindow *window = init_window();
 
         // From https://mujoco.readthedocs.io/en/3.3.7/programming/simulation.html
         // install control callback
         mjcb_control = ctrl;
 
         // TODO: add a window
-        loop();
+        loop(window);
         close_window();
         free_mujoco_model();
 

@@ -7,9 +7,6 @@
 
 namespace safe_learning {
 
-RlController::RlController() {
-}
-
 template <typename T> int wait_for_service(T client) {
   while (!client->wait_for_service(1s)) {
     if (!rclcpp::ok()) {
@@ -95,8 +92,8 @@ int RlController::init_model(std::shared_ptr<rclcpp::Node> node, string model_pa
 
 mjtNum *RlController::neg_K() { return nullptr; }
 
-RlController RlController::initialize(string model_file_path) {
-  RlController ctrl = RlController();
+std::unique_ptr<RlController> RlController::initialize() {
+  std::unique_ptr<RlController> ctrl = std::make_unique<RlController>();
 
   return ctrl;
 }

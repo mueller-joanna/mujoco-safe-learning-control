@@ -1,15 +1,16 @@
 #ifndef LQR_NODE_H
 #define LQR_NODE_H
 
+// Contains Eigen
+#include "controllers/base.hpp"
+
 #include <float.h>
 #include <iostream>
+#include <memory>
 
-#include <Eigen/Dense>
+#include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
 
-#include "models/cart-pole.hpp"
-
-using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using RowMatrix4d = Eigen::Matrix<double, 4, 4, Eigen::RowMajor>;
 
@@ -24,10 +25,8 @@ namespace safe_learning {
 static float EPS = std::pow(1, -6);
 static bool CENTERED = true;
 
-class LqrController {
-private:
-  LqrController(CartPole cart_pole);
-  LqrController() { }
+class LqrController : public Controller {
+// TODO: How to private/protect constructor while using factory
 
 private:
   VectorXd desired_set_point_x;
@@ -48,12 +47,16 @@ private:
                            const uint iter_max = 100000);
 
 private:
-  void set_K(MatrixXd K_mat) { this->K_mat = K_mat; }
+  void set_K(MatrixXd K_mat) override { this->K_mat = K_mat; }
 
 public:
-  mjtNum *neg_K();
-  static LqrController initialize(const mjModel *m, mjData *d);
-  static LqrController initialize(CartPole cart_pole);
+  mjtNum *neg_K() override;
+  static std::unique_ptr<LqrController> initialize(const mjModel *m, mjData *d);
+  // Because of mutual base class with RlController
+  // TODO: find better solution
+  int init_model(std::shared_ptr<rclcpp::Node> node, string model_path) override {};
+  int request_train(std::shared_ptr<rclcpp::Node> node) override {};
+  float request_action(std::shared_ptr<rclcpp::Node> node) override {};
 };
 } // namespace safe_learning
 

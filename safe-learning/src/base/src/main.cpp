@@ -2,7 +2,6 @@
 #include <memory>
 #include <functional>
 #include <filesystem>
-#include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
 #include <stdio.h>
 
@@ -12,24 +11,36 @@
 #include "sl_interfaces/srv/string.hpp"
 
 //#include "client.hpp"
+#include "controllers/base.hpp"
+#include "controllers/controller_factory.hpp"
 #include "controllers/lqr.hpp"
 #include "controllers/rl.hpp"
-#include "models/cart-pole.hpp"
 #include "visualization/mujoco_sim.hpp"
 
-using safe_learning::CartPole;
+using safe_learning::ControllerFactory;
+using safe_learning::LqrFactory;
+using safe_learning::RlFactory;
+using safe_learning::Controller;
 using safe_learning::LqrController;
 using safe_learning::RlController;
 
 using namespace std;
 using namespace std::chrono_literals;
 
+// TODO: replace by setting
+/*
+ * 1: RL
+ * 2: LQR
+*/
+static int CONTROLLER_TYPE = 2;
+
 // --- Globals kept tiny for GLFW callbacks ---
 mjModel *m = nullptr;
 mjData *d = nullptr;
 static mjtNum *scl;
 
-// //static RlController* ctrl;
+static std::shared_ptr<rclcpp::Node> node;
+std::unique_ptr<Controller> ctrl = nullptr;
 
 static int starting_delay = 10;
 
@@ -53,7 +64,6 @@ double *get_state(mjData *d) {
 
 void cartpole_controller_lqr(const mjModel *m, mjData *d) {
   double *state = get_state(d);
-  //scl = ctrl->get_action();
   const double res = inner(state, scl, m->nv);
   if (starting_delay > 0) {
     starting_delay--;
@@ -63,17 +73,15 @@ void cartpole_controller_lqr(const mjModel *m, mjData *d) {
 }
 
 
+void cartpole_controller_rl(const mjModel *m, mjData *d) {
+  d->ctrl[0] = ctrl->request_action(node);
+}
+
+
 ///////////////////////////////// main //////////////////////////////////////
 int main(int argc, char ** argv)
 {
   printf("Hello from MuJoCo C library version %d\n", mj_version());
-  
-  
-  // mjModel *m = nullptr;
-  // mjData *d = nullptr;
-  
-  // CartPole model = CartPole();
-  // model.setup_model();
   
   // TODO: refactor
   string model_path = "assets/cartpole.xml";
@@ -89,42 +97,43 @@ int main(int argc, char ** argv)
     return 1;
   }
   d = mj_makeData(m);
-  
-  //LqrController ctrl = LqrController::initialize(model);
-  //LqrController ctrl = LqrController::initialize(m, d);
-  RlController ctrl = RlController::initialize(model_path);
-  scl = ctrl.neg_K();
-  
   d->ctrl[0] = 0.5;
   
   rclcpp::init(argc, argv);
 
-  std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("add_two_ints_server");
+  node = rclcpp::Node::make_shared("add_two_ints_server");
 
-  int status = ctrl.init_model(node, abs_model_path);
-  if (status == 0) {
-    status = ctrl.request_train(node);
+  int status = 0;
+  switch (CONTROLLER_TYPE)
+  {
+  case 1:
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Using RL controller.");
+    ctrl = RlFactory().create(m, d);
+    status = ctrl->init_model(node, abs_model_path);
+    if (status == 0) {
+      status = ctrl->request_train(node);
+    }
+    if (status == 0) {
+      float action = ctrl->request_action(node);
+      safe_learning::run_simulation(cartpole_controller_rl, m, d);
+    }
+    break;
+
+  case 2:
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Using LQR controller.");
+    ctrl = LqrFactory().create(m, d);
+    scl = ctrl->neg_K();
+    safe_learning::run_simulation(cartpole_controller_lqr, m, d);
+    break;
+  
+  default:
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "No valid controller type was chosen.");
+    break;
   }
-  if (status == 0) {
-    float action = ctrl.request_action(node);
-  }
+  
 
-  //rclcpp::executors::MultiThreadedExecutor executor;
-
-  // <node>: std::variant<std::shared_ptr<custom_class>>
-  // std::variant<std::shared_ptr<MinimalPublisher>> node = 
-  //   std::make_shared<MinimalPublisher>();
-  // std::visit([&executor](auto&& arg) { executor.add_node(arg); }, node);
-
-  // executor.spin();
-  //rclcpp::spin(node);
+  rclcpp::spin(node);
   rclcpp::shutdown();
-  //safe_learning::run_simulation(cartpole_controller_lqr, m, d);
-
-  // rclcpp::executors::MultiThreadedExecutor executor;
-
-  // executor.spin();
-  // rclcpp::shutdown();
 
   return 0;
 }

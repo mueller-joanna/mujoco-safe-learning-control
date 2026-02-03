@@ -32,7 +32,6 @@ set(CONTROLLERS ${CMAKE_CURRENT_LIST_DIR}/src/controllers)
 set(MODELS ${CMAKE_CURRENT_LIST_DIR}/src/models)
 set(VISUALIZATION ${CMAKE_CURRENT_LIST_DIR}/src/visualization)
 set(LIBS 
-  ${MODELS}/cart-pole.cpp
   ${CONTROLLERS}/lqr.cpp
   ${CONTROLLERS}/rl.cpp
   ${VISUALIZATION}/mujoco_sim.cpp
