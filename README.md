@@ -24,14 +24,22 @@
 | [Googletest](https://github.com/google/googletest) | | | |
 
 ## Getting started
-1. Build project by using 
+1. Building and running base project (including ROS 2 interfaces)
 ```
-./scripts/project_build.sh
+./scripts/base_build.sh
 ```
-2. Run with
+2. Building and running reinforcement controller (including ROS 2 interfaces)
 ```
-./build/safe_learning
+./scripts/rl_controller_build.sh
 ```
+3. Building and running complete project
+```
+./scripts/project-build.sh
+```
+
+### Settings
+TODO:
+- Choice of controller (currently hard-coded as global-ish constant)
 
 ### Linting
 ```

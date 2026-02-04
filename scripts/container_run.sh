@@ -9,7 +9,7 @@ user_id=$(id -rg)
 # Adapted from 
 # - https://discussion.fedoraproject.org/t/cannot-run-wayland-gui-app-in-podman/105151/2
 # - https://stackoverflow.com/a/51209546/10512964
-podman run -it -e "DISPLAY=unix:0" \
+podman run -it -e DISPLAY=$DISPLAY \
 -e ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST \
 -e  ROS_DOMAIN_ID=42 \
 --net host --pid=host --ipc=host \
